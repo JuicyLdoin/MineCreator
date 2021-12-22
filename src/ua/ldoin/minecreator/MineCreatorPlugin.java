@@ -62,6 +62,9 @@ public class MineCreatorPlugin extends JavaPlugin {
 
     public void onDisable() {
 
+        for (Mine mine : MineManager.mines)
+            MineStats.breakDisplay(mine);
+
         MineManager.save();
 
     }

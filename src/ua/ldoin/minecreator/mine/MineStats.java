@@ -37,6 +37,16 @@ public class MineStats {
             }
     }
 
+    public static void breakDisplay(Mine mine) {
+
+        if (holograms_HologramList.containsKey(mine)) {
+
+            holograms_HologramList.get(mine).delete();
+            holograms_HologramList.remove(mine);
+
+        }
+    }
+
     private static List<String> getLines(Mine mine) {
 
         List<String> lines = new ArrayList<>();

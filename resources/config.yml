@@ -27,7 +27,9 @@ messages:
   not_an_integer: "&cThe number is not an integer!"
 
 mine:
+
   # if server has plugin HologramList
+  use_holograms: true
   hologram:
     - "Mine"
     - " "
