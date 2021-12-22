@@ -1,9 +1,7 @@
 package ua.ldoin.minecreator;
 
-import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.internal.annotation.Selection;
-import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -95,8 +93,8 @@ public class Commands implements CommandExecutor {
 
                     String name = args[1];
 
-                    Location position1 = null;
-                    Location position2 = null;
+                    Location position1;
+                    Location position2;
 
                     if (!Plugins.WorldEdit) {
 
@@ -114,24 +112,16 @@ public class Commands implements CommandExecutor {
 
                         WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
 
-                        Region selection;
+                        Selection selection = worldEdit.getSelection(p);
 
-                        try {
+                        position1 = new Location(p.getWorld(), selection.getMinimumPoint().getBlockX(),
+                                selection.getMinimumPoint().getBlockY(),
+                                selection.getMinimumPoint().getBlockZ());
 
-                            selection = worldEdit.getSession(p).getSelection();
+                        position2 = new Location(p.getWorld(), selection.getMaximumPoint().getBlockX(),
+                                selection.getMaximumPoint().getBlockY(),
+                                selection.getMaximumPoint().getBlockZ());
 
-                            position1 = new Location(p.getWorld(), selection.getMinimumPoint().getBlockX(),
-                                    selection.getMinimumPoint().getBlockY(),
-                                    selection.getMinimumPoint().getBlockZ());
-                            position2 = new Location(p.getWorld(), selection.getMaximumPoint().getBlockX(),
-                                    selection.getMaximumPoint().getBlockY(),
-                                    selection.getMaximumPoint().getBlockZ());
-
-                        } catch (IncompleteRegionException e) {
-
-                            e.printStackTrace();
-
-                        }
                     }
 
                     if (MineManager.mineCreated(name)) {
