@@ -1,5 +1,10 @@
 package ua.ldoin.minecreator;
 
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.internal.annotation.Selection;
+import com.sk89q.worldedit.regions.Region;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.ldoin.minecreator.mine.*;
 import ua.ldoin.minecreator.mine.types.CuboidMine;
+import ua.ldoin.minecreator.utils.Plugins;
 import ua.ldoin.minecreator.utils.SerializableBlock;
 
 import java.util.HashMap;
@@ -52,6 +58,13 @@ public class Commands implements CommandExecutor {
 
                 if (args[0].equals("setpos")) {
 
+                    if (Plugins.WorldEdit) {
+
+                        MineCreatorPlugin.sendMessage(p, MineCreatorPlugin.getMessageConfig("mines.use_worldedit", null));
+                        return false;
+
+                    }
+
                     if (!args[1].matches("^-?\\d+$")) {
 
                         MineCreatorPlugin.sendMessage(p, MineCreatorPlugin.getMessageConfig("not_an_integer", null));
@@ -82,6 +95,45 @@ public class Commands implements CommandExecutor {
 
                     String name = args[1];
 
+                    Location position1 = null;
+                    Location position2 = null;
+
+                    if (!Plugins.WorldEdit) {
+
+                        if (!pos1.containsKey(p) && !pos2.containsKey(p)) {
+
+                            MineCreatorPlugin.sendMessage(p, MineCreatorPlugin.getMessageConfig("mines.not_placed", null).replace("%mine%", name));
+                            return false;
+
+                        }
+
+                        position1 = pos1.get(p);
+                        position2 = pos2.get(p);
+
+                    } else {
+
+                        WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+
+                        Region selection;
+
+                        try {
+
+                            selection = worldEdit.getSession(p).getSelection();
+
+                            position1 = new Location(p.getWorld(), selection.getMinimumPoint().getBlockX(),
+                                    selection.getMinimumPoint().getBlockY(),
+                                    selection.getMinimumPoint().getBlockZ());
+                            position2 = new Location(p.getWorld(), selection.getMaximumPoint().getBlockX(),
+                                    selection.getMaximumPoint().getBlockY(),
+                                    selection.getMaximumPoint().getBlockZ());
+
+                        } catch (IncompleteRegionException e) {
+
+                            e.printStackTrace();
+
+                        }
+                    }
+
                     if (MineManager.mineCreated(name)) {
 
                         MineCreatorPlugin.sendMessage(p, MineCreatorPlugin.getMessageConfig("mines.already_created", null).replace("%mine%", name));
@@ -89,7 +141,7 @@ public class Commands implements CommandExecutor {
 
                     }
 
-                    Mine mine = new CuboidMine(name, pos1.get(p), pos2.get(p), p.getWorld(), null, -1, -1);
+                    Mine mine = new CuboidMine(name, position1, position2, p.getWorld(), null, -1, -1);
 
                     MineManager.mines.add(mine);
                     MineManager.save();
@@ -267,7 +319,12 @@ public class Commands implements CommandExecutor {
             MineCreatorPlugin.sendMessage(p, "&e&lMineCreator Help");
             MineCreatorPlugin.sendMessage(p, "&e/minecreator &f- look all commands of &eMineCreator");
 
-            MineCreatorPlugin.sendMessage(p, "&e/minecreator setpos [pos] &f- set mine position [pos] on current location");
+            if (!Plugins.WorldEdit) {
+
+                MineCreatorPlugin.sendMessage(p, "&c&lWorldEdit not found!");
+                MineCreatorPlugin.sendMessage(p, "&e/minecreator setpos [pos] &f- set mine position [pos] on current location");
+
+            }
 
             MineCreatorPlugin.sendMessage(p, "&e/minecreator create [mine] &f- create mine with name [mine]");
             MineCreatorPlugin.sendMessage(p, "&e/minecreator delete [mine] &f- delete mine with name [mine]");

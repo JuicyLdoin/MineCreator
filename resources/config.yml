@@ -3,7 +3,9 @@ messages:
     already_created: "&cMine %mine% is already created!"
     mine_not_found: "&cMine not found!"
 
+    use_worldedit: "&cPlease, use WorldEdit for place points!"
     set_point: "&fPoint established!"
+    not_placed: "&cPoints not placed!"
 
     points_not_setted: "&fPoints not established!"
     region_not_found: "&fRegion not found!"

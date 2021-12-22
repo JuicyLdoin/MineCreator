@@ -6,9 +6,13 @@ public class Plugins {
 
     public static boolean HologramList;
 
+    public static boolean WorldEdit;
+
     public static void init() {
 
         HologramList = Bukkit.getServer().getPluginManager().getPlugin("HologramList") != null;
+
+        WorldEdit = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit") != null;
 
     }
 
