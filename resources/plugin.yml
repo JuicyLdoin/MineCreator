@@ -1,6 +1,6 @@
 name: MineCreator
 main: ua.ldoin.minecreator.MineCreatorPlugin
-version: 1.0
+version: 1.1
 author: Ldoin
 softdepend: [HologramList, HolographicDisplays, WorldEdit]
 commands:
