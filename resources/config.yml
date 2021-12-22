@@ -32,8 +32,10 @@ mine:
 
   blocks_drop_to_inventory: true
 
-  # if server has plugin HologramList
   use_holograms: true
+  use_worldedit: false
+
+  # if server has plugin HologramList
   hologram:
     - "Mine"
     - " "

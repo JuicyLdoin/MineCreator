@@ -56,12 +56,13 @@ public class Commands implements CommandExecutor {
 
                 if (args[0].equals("setpos")) {
 
-                    if (Plugins.WorldEdit) {
+                    if (MineCreatorPlugin.plugin.getConfig().getBoolean("mine.use_worldedit"))
+                        if (Plugins.WorldEdit) {
 
-                        MineCreatorPlugin.sendMessage(p, MineCreatorPlugin.getMessageConfig("mines.use_worldedit", null));
-                        return false;
+                            MineCreatorPlugin.sendMessage(p, MineCreatorPlugin.getMessageConfig("mines.use_worldedit", null));
+                            return false;
 
-                    }
+                        }
 
                     if (!args[1].matches("^-?\\d+$")) {
 
@@ -93,11 +94,27 @@ public class Commands implements CommandExecutor {
 
                     String name = args[1];
 
-                    Location position1;
-                    Location position2;
+                    Location position1 = null;
+                    Location position2 = null;
 
-                    if (!Plugins.WorldEdit) {
+                    if (MineCreatorPlugin.plugin.getConfig().getBoolean("mine.use_worldedit"))
+                        if (Plugins.WorldEdit) {
 
+                            WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+
+                            Selection selection = worldEdit.getSelection(p);
+
+                            position1 = new Location(p.getWorld(), selection.getMinimumPoint().getBlockX(),
+                                    selection.getMinimumPoint().getBlockY(),
+                                    selection.getMinimumPoint().getBlockZ());
+
+                            position2 = new Location(p.getWorld(), selection.getMaximumPoint().getBlockX(),
+                                    selection.getMaximumPoint().getBlockY(),
+                                    selection.getMaximumPoint().getBlockZ());
+
+                        }
+
+                    if (position1 == null) {
                         if (!pos1.containsKey(p) && !pos2.containsKey(p)) {
 
                             MineCreatorPlugin.sendMessage(p, MineCreatorPlugin.getMessageConfig("mines.not_placed", null).replace("%mine%", name));
@@ -107,21 +124,6 @@ public class Commands implements CommandExecutor {
 
                         position1 = pos1.get(p);
                         position2 = pos2.get(p);
-
-                    } else {
-
-                        WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-
-                        Selection selection = worldEdit.getSelection(p);
-
-                        position1 = new Location(p.getWorld(), selection.getMinimumPoint().getBlockX(),
-                                selection.getMinimumPoint().getBlockY(),
-                                selection.getMinimumPoint().getBlockZ());
-
-                        position2 = new Location(p.getWorld(), selection.getMaximumPoint().getBlockX(),
-                                selection.getMaximumPoint().getBlockY(),
-                                selection.getMaximumPoint().getBlockZ());
-
                     }
 
                     if (MineManager.mineCreated(name)) {
