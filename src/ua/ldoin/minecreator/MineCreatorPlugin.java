@@ -1,0 +1,68 @@
+package ua.ldoin.minecreator;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import ua.ldoin.minecreator.mine.*;
+import ua.ldoin.minecreator.mine.types.*;
+import ua.ldoin.minecreator.utils.*;
+
+public class MineCreatorPlugin extends JavaPlugin {
+
+    public static MineCreatorPlugin plugin;
+
+    static {
+
+        ConfigurationSerialization.registerClass(CuboidMine.class);
+
+    }
+
+    public void onEnable() {
+
+        plugin = this;
+
+        saveDefaultConfig();
+
+        Plugins.init();
+
+        sendMessage(Bukkit.getConsoleSender(), "&fHologram plugin - " + (Plugins.HologramList ? "HologramList" : "&cnot found"));
+
+        MineManager.init();
+
+        getCommand("minecreator").setExecutor(new Commands());
+
+    }
+
+    public static void sendMessage(CommandSender sender, String message) {
+
+        sender.sendMessage(replace(message, null));
+
+    }
+
+    public static String getMessageConfig(String message, Mine mine) {
+
+        return replace(plugin.getConfig().getString("messages." + message), mine);
+
+    }
+
+    public static String replace(String string, Mine mine) {
+
+        if (mine == null)
+            return string.replace("&", "§");
+
+        return string.replace("&", "§")
+                .replace("%mine%", mine.getName())
+                .replace("%to_reset%", String.valueOf(mine.getToReset()))
+                .replace("%total_blocks_in_mine%", String.valueOf(mine.getTotalBlocksInMine()))
+                .replace("%blocks_mined%", String.valueOf(mine.getTotalBlocksInMine() - mine.getBlocksInMine()));
+
+    }
+
+    public void onDisable() {
+
+        MineManager.save();
+
+    }
+}

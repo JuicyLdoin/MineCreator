@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MineCreator">
+    <output-path>D:/Server/Test/plugins</output-path>
+    <root id="archive" name="MineCreator.jar">
+      <element id="dir-copy" path="$PROJECT_DIR$/resources" />
+      <element id="module-output" name="MineCreator" />
+    </root>
+  </artifact>
+</component>
