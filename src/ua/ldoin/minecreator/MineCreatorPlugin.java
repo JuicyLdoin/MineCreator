@@ -33,6 +33,8 @@ public class MineCreatorPlugin extends JavaPlugin {
 
         getCommand("minecreator").setExecutor(new Commands());
 
+        Bukkit.getPluginManager().registerEvents(new Listeners(), this);
+
     }
 
     public static void sendMessage(CommandSender sender, String message) {

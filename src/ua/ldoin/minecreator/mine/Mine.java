@@ -232,6 +232,17 @@ public abstract class Mine implements ConfigurationSerializable {
 
     }
 
+    public boolean isAllowToBreakBlock(Block b) {
+
+        Location l = b.getLocation();
+
+        return (l.getWorld().equals(world) && l
+                .getX() >= minX && l.getX() <= maxX && l
+                .getY() >= minY && l.getY() <= maxY && l
+                .getZ() >= minZ && l.getZ() <= maxZ);
+
+    }
+
     public void setWorld(World world) {
 
         this.world = world;

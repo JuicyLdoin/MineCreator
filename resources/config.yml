@@ -28,6 +28,8 @@ messages:
 
 mine:
 
+  blocks_drop_to_inventory: true
+
   # if server has plugin HologramList
   use_holograms: true
   hologram:
