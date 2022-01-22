@@ -196,31 +196,9 @@ public abstract class Mine implements ConfigurationSerializable {
 
     }
 
-    public int getBlocksInMine() {
+    public abstract int getMinedBlocks();
 
-        ArrayList<Block> blocks = new ArrayList<>();
-
-        for (int x = minX; x <= maxX; x++)
-            for (int y = minY; y <= maxY; y++)
-                for (int z = minZ; z <= maxZ; z++)
-                    if (world.getBlockAt(x, y, z).isEmpty())
-                        blocks.add(world.getBlockAt(x, y, z));
-
-        return blocks.size();
-    }
-
-    public int getTotalBlocksInMine() {
-
-        ArrayList<Block> blocks = new ArrayList<>();
-
-        for (int x = minX; x <= maxX; x++)
-            for (int y = minY; y <= maxY; y++)
-                for (int z = minZ; z <= maxZ; z++)
-                    blocks.add(world.getBlockAt(x, y, z));
-
-        return blocks.size();
-
-    }
+    public abstract int getTotalBlocksInMine();
 
     public boolean isInside(Player p) {
 

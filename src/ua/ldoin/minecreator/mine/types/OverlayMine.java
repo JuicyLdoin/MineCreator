@@ -3,6 +3,7 @@ package ua.ldoin.minecreator.mine.types;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -11,6 +12,7 @@ import ua.ldoin.minecreator.mine.Mine;
 import ua.ldoin.minecreator.utils.LocationUtil;
 import ua.ldoin.minecreator.utils.block.OverlayBlock;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -100,6 +102,39 @@ public class OverlayMine extends Mine implements ConfigurationSerializable {
     public void removeBlock(OverlayBlock block) {
 
         blocks.remove(block);
+
+    }
+
+    public int getMinedBlocks() {
+
+        ArrayList<Block> blocks = new ArrayList<>();
+
+        for (int x = getMinX(); x <= getMaxX(); x++)
+            for (int y = getMinY(); y <= getMaxY(); y++)
+                for (int z = getMinZ(); z <= getMaxZ(); z++)
+                    for (OverlayBlock block : this.blocks.keySet())
+                        if (getWorld().getBlockAt(x, y - 1, z).getTypeId() == block.getGround().getBlock() &&
+                                getWorld().getBlockAt(x, y - 1, z).getData() == block.getGround().getData())
+                            if (getWorld().getBlockAt(x, y, z).isEmpty())
+                                blocks.add(getWorld().getBlockAt(x, y, z));
+
+        return blocks.size();
+
+    }
+
+    public int getTotalBlocksInMine() {
+
+        ArrayList<Block> blocks = new ArrayList<>();
+
+        for (int x = getMinX(); x <= getMaxX(); x++)
+            for (int y = getMinY(); y <= getMaxY(); y++)
+                for (int z = getMinZ(); z <= getMaxZ(); z++)
+                    for (OverlayBlock block : this.blocks.keySet())
+                        if (getWorld().getBlockAt(x, y - 1, z).getTypeId() == block.getGround().getBlock() &&
+                                getWorld().getBlockAt(x, y - 1, z).getData() == block.getGround().getData())
+                            blocks.add(getWorld().getBlockAt(x, y, z));
+
+        return blocks.size();
 
     }
 

@@ -3,6 +3,7 @@ package ua.ldoin.minecreator.mine.types;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -11,6 +12,7 @@ import ua.ldoin.minecreator.mine.Mine;
 import ua.ldoin.minecreator.utils.LocationUtil;
 import ua.ldoin.minecreator.utils.block.SerializableBlock;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -100,6 +102,33 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
     public void removeBlock(SerializableBlock block) {
 
         blocks.remove(block);
+
+    }
+
+    public int getMinedBlocks() {
+
+        ArrayList<Block> blocks = new ArrayList<>();
+
+        for (int x = getMinX(); x <= getMaxX(); x++)
+            for (int y = getMinY(); y <= getMaxY(); y++)
+                for (int z = getMinZ(); z <= getMaxZ(); z++)
+                    if (getWorld().getBlockAt(x, y, z).isEmpty())
+                        blocks.add(getWorld().getBlockAt(x, y, z));
+
+        return blocks.size();
+
+    }
+
+    public int getTotalBlocksInMine() {
+
+        ArrayList<Block> blocks = new ArrayList<>();
+
+        for (int x = getMinX(); x <= getMaxX(); x++)
+            for (int y = getMinY(); y <= getMaxY(); y++)
+                for (int z = getMinZ(); z <= getMaxZ(); z++)
+                    blocks.add(getWorld().getBlockAt(x, y, z));
+
+        return blocks.size();
 
     }
 

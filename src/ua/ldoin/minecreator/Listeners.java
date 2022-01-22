@@ -30,7 +30,7 @@ public class Listeners implements Listener {
                     if (player.getItemInHand().getEnchantments().containsKey(Enchantment.SILK_TOUCH))
                         player.getInventory().addItem(new ItemStack(event.getBlock().getType(), 1, event.getBlock().getData()));
                     else
-                        event.getBlock().getDrops(player.getItemInHand()).forEach(items -> player.getInventory().addItem(new ItemStack[]{new ItemStack(items)}));
+                        event.getBlock().getDrops(player.getItemInHand()).forEach(items -> player.getInventory().addItem(new ItemStack[] { new ItemStack(items) }));
 
                 }
     }

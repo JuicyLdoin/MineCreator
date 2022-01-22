@@ -62,7 +62,7 @@ public class MineCreatorPlugin extends JavaPlugin {
                 .replace("%mine%", mine.getName())
                 .replace("%to_reset%", String.valueOf(mine.getToReset()))
                 .replace("%total_blocks_in_mine%", String.valueOf(mine.getTotalBlocksInMine()))
-                .replace("%blocks_mined%", String.valueOf(mine.getTotalBlocksInMine() - mine.getBlocksInMine()));
+                .replace("%blocks_mined%", String.valueOf(mine.getMinedBlocks()));
 
     }
 
