@@ -16,6 +16,7 @@ public class MineCreatorPlugin extends JavaPlugin {
     static {
 
         ConfigurationSerialization.registerClass(CuboidMine.class);
+        ConfigurationSerialization.registerClass(OverlayMine.class);
 
     }
 
@@ -50,6 +51,9 @@ public class MineCreatorPlugin extends JavaPlugin {
     }
 
     public static String replace(String string, Mine mine) {
+
+        if (string == null)
+            return "";
 
         if (mine == null)
             return string.replace("&", "§");

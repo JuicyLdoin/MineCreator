@@ -9,42 +9,42 @@ import org.bukkit.scheduler.BukkitRunnable;
 import ua.ldoin.minecreator.MineCreatorPlugin;
 import ua.ldoin.minecreator.mine.Mine;
 import ua.ldoin.minecreator.utils.LocationUtil;
-import ua.ldoin.minecreator.utils.block.SerializableBlock;
+import ua.ldoin.minecreator.utils.block.OverlayBlock;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class CuboidMine extends Mine implements ConfigurationSerializable {
+public class OverlayMine extends Mine implements ConfigurationSerializable {
 
-    public CuboidMine(String name, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, World world, Location stats, int resetDelay, int toReset) {
+    public OverlayMine(String name, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, World world, Location stats, int resetDelay, int toReset) {
 
-        super(name, Types.CUBOID, minX, minY, minZ, maxX, maxY, maxZ, world, stats, true, resetDelay, toReset);
-
-        blocks = new HashMap<>();
-
-    }
-
-    public CuboidMine(String name, Location minPoint, Location maxPoint, World world, Location stats, int resetDelay, int toReset) {
-
-        super(name, Types.CUBOID, minPoint, maxPoint, world, stats, true, resetDelay, toReset);
+        super(name, Types.OVERLAY, minX, minY, minZ, maxX, maxY, maxZ, world, stats, false, resetDelay, toReset);
 
         blocks = new HashMap<>();
 
     }
 
-    public CuboidMine(Map<String, Object> mine) {
+    public OverlayMine(String name, Location minPoint, Location maxPoint, World world, Location stats, int resetDelay, int toReset) {
 
-        super((String) mine.get("name"), Types.CUBOID, (Integer) mine.get("minX"), (Integer) mine.get("minY"), (Integer) mine.get("minZ"),
+        super(name, Types.OVERLAY, minPoint, maxPoint, world, stats, false, resetDelay, toReset);
+
+        blocks = new HashMap<>();
+
+    }
+
+    public OverlayMine(Map<String, Object> mine) {
+
+        super((String) mine.get("name"), Types.OVERLAY, (Integer) mine.get("minX"), (Integer) mine.get("minY"), (Integer) mine.get("minZ"),
                 (Integer) mine.get("maxX"), (Integer) mine.get("maxY"), (Integer) mine.get("maxZ"), Bukkit.getWorld((String) mine.get("world")),
-                LocationUtil.getLocation((String) mine.get("stats")), true, (Integer) mine.get("resetDelay"), (Integer) mine.get("toReset"));
+                LocationUtil.getLocation((String) mine.get("stats")), false, (Integer) mine.get("resetDelay"), (Integer) mine.get("toReset"));
 
         String stringBlocks = (String) mine.get("blocks");
         blocks = new HashMap<>();
 
         if (!stringBlocks.isEmpty())
             for (String block : stringBlocks.split("_"))
-                blocks.put(new SerializableBlock(block.split("-")[0]), Double.parseDouble(block.split("-")[1]));
+                blocks.put(new OverlayBlock(block.split("-")[0]), Double.parseDouble(block.split("-")[1]));
 
     }
 
@@ -68,7 +68,7 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
 
         StringBuilder b = new StringBuilder();
 
-        for (Map.Entry<SerializableBlock, Double> entry : blocks.entrySet())
+        for (Map.Entry<OverlayBlock, Double> entry : blocks.entrySet())
             b.append(entry.getKey().toString()).append("-").append(entry.getValue()).append("_");
 
         me.put("blocks", b.toString());
@@ -83,21 +83,21 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
 
     }
 
-    private final Map<SerializableBlock, Double> blocks;
+    private final Map<OverlayBlock, Double> blocks;
 
-    public Map<SerializableBlock, Double> getBlocks() {
+    public Map<OverlayBlock, Double> getBlocks() {
 
         return blocks;
 
     }
 
-    public void setBlock(SerializableBlock block, double chance) {
+    public void setBlock(OverlayBlock block, double chance) {
 
         blocks.put(block, chance);
 
     }
 
-    public void removeBlock(SerializableBlock block) {
+    public void removeBlock(OverlayBlock block) {
 
         blocks.remove(block);
 
@@ -134,13 +134,15 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
 
                                 double r = ThreadLocalRandom.current().nextDouble();
 
-                                for (Map.Entry<SerializableBlock, Double> map : blocks.entrySet())
-                                    if (r <= map.getValue()) {
+                                for (Map.Entry<OverlayBlock, Double> map : blocks.entrySet())
+                                    if (getWorld().getBlockAt(x, y - 1, z).getTypeId() == map.getKey().getGround().getBlock() &&
+                                            getWorld().getBlockAt(x, y - 1, z).getData() == map.getKey().getGround().getData())
+                                        if (r <= map.getValue()) {
 
-                                        getWorld().getBlockAt(x, y, z).setTypeIdAndData(map.getKey().getBlock(), map.getKey().getData(), true);
-                                        break;
+                                            getWorld().getBlockAt(x, y, z).setTypeIdAndData(map.getKey().getBlock().getBlock(), map.getKey().getBlock().getData(), true);
+                                            break;
 
-                                    }
+                                        }
                             }
                 }
             }.runTask(MineCreatorPlugin.plugin);

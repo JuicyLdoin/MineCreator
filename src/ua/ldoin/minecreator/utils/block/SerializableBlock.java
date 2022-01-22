@@ -1,4 +1,4 @@
-package ua.ldoin.minecreator.utils;
+package ua.ldoin.minecreator.utils.block;
 
 public class SerializableBlock {
 

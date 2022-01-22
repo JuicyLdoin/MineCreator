@@ -24,6 +24,8 @@ messages:
     stats: "&fStats location of mine %mine% established to current position!"
     reset_delay: "&fReset time of mine %mine% changed to &e%time%s&f!"
 
+    invalid_mine_type: "&cInvalid mine type (CUBOID/OVERLAY)!"
+
   for_players: "&cOnly players can use this command!"
   no_permissions: "&cSorry, but you don't have permissions to this command!"
   not_an_integer: "&cThe number is not an integer!"

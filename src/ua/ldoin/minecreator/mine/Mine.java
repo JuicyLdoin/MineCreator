@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.ldoin.minecreator.MineCreatorPlugin;
 import ua.ldoin.minecreator.mine.types.CuboidMine;
+import ua.ldoin.minecreator.mine.types.OverlayMine;
 import ua.ldoin.minecreator.mine.types.Types;
 
 import java.util.ArrayList;
@@ -236,10 +237,10 @@ public abstract class Mine implements ConfigurationSerializable {
 
         Location l = b.getLocation();
 
-        return (l.getWorld().equals(world) && l
-                .getX() >= minX && l.getX() <= maxX && l
-                .getY() >= minY && l.getY() <= maxY && l
-                .getZ() >= minZ && l.getZ() <= maxZ);
+        return (l.getWorld().equals(world) &&
+                l.getX() >= minX && l.getX() <= maxX &&
+                l.getY() >= minY && l.getY() <= maxY &&
+                l.getZ() >= minZ && l.getZ() <= maxZ);
 
     }
 
@@ -307,15 +308,22 @@ public abstract class Mine implements ConfigurationSerializable {
 
     }
 
+    public void callFill() {
+
+        if (type.equals(Types.CUBOID))
+            ((CuboidMine) this).fill();
+
+        if (type.equals(Types.OVERLAY))
+            ((OverlayMine) this).fill();
+
+    }
+
     public void reset() {
 
         if (resetDelay < 0)
             return;
 
         toReset = resetDelay;
-
-        if (type.equals(Types.CUBOID))
-            ((CuboidMine) this).fill();
 
     }
 
