@@ -32,6 +32,7 @@ messages:
 
 mine:
 
+  statistic_cooldown: 20 # (in ticks)
   blocks_drop_to_inventory: true
 
   use_holograms: true

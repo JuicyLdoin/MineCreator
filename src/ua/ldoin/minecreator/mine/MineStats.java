@@ -32,7 +32,7 @@ public class MineStats {
                             holograms_HologramList.get(mine).UpdateLines(getLines(mine));
 
                         }
-                    }.runTaskTimer(MineCreatorPlugin.plugin, 0L, 5L);
+                    }.runTaskTimer(MineCreatorPlugin.plugin, 0L, MineCreatorPlugin.plugin.getConfig().getInt("mine.statistic_cooldown"));
                 }
             }
     }
