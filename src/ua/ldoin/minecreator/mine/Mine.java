@@ -11,11 +11,9 @@ import ua.ldoin.minecreator.mine.types.CuboidMine;
 import ua.ldoin.minecreator.mine.types.OverlayMine;
 import ua.ldoin.minecreator.mine.types.Types;
 
-import java.util.ArrayList;
-
 public abstract class Mine implements ConfigurationSerializable {
 
-    public Mine(String name, Types type, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, World world, Location stats, boolean teleport, int resetDelay, int toReset) {
+    public Mine(String name, Types type, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, World world, boolean teleport, int resetDelay, int toReset) {
 
         if (world == null)
             throw new NullPointerException("The world in which the mine '" + name + "' is located has not been found!");
@@ -34,8 +32,6 @@ public abstract class Mine implements ConfigurationSerializable {
 
         this.world = world;
 
-        this.stats = stats;
-
         this.teleport = teleport;
 
         this.resetDelay = resetDelay;
@@ -43,7 +39,7 @@ public abstract class Mine implements ConfigurationSerializable {
 
     }
 
-    public Mine(String name, Types type, Location minPoint, Location maxPoint, World world, Location stats, boolean teleport, int resetDelay, int toReset) {
+    public Mine(String name, Types type, Location minPoint, Location maxPoint, World world, boolean teleport, int resetDelay, int toReset) {
 
         if (world == null)
             throw new NullPointerException("The world in which the mine '" + name + "' is located has not been found!");
@@ -89,8 +85,6 @@ public abstract class Mine implements ConfigurationSerializable {
 
         this.world = world;
 
-        this.stats = stats;
-
         this.teleport = teleport;
 
         this.resetDelay = resetDelay;
@@ -112,8 +106,6 @@ public abstract class Mine implements ConfigurationSerializable {
 
     private World world;
     private boolean teleport;
-
-    private Location stats;
 
     private int resetDelay;
     private int toReset;
@@ -169,12 +161,6 @@ public abstract class Mine implements ConfigurationSerializable {
     public World getWorld() {
 
         return world;
-
-    }
-
-    public Location getStats() {
-
-        return stats;
 
     }
 
@@ -264,12 +250,6 @@ public abstract class Mine implements ConfigurationSerializable {
         maxX = maxPoint.getBlockX();
         maxY = maxPoint.getBlockY();
         maxZ = maxPoint.getBlockZ();
-
-    }
-
-    public void setStats(Location stats) {
-
-        this.stats = stats;
 
     }
 

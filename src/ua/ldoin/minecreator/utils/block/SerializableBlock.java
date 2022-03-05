@@ -1,15 +1,17 @@
 package ua.ldoin.minecreator.utils.block;
 
+import org.bukkit.Material;
+
 public class SerializableBlock {
 
-    public SerializableBlock(int block) {
+    public SerializableBlock(Material block) {
 
         this.block = block;
         this.data = 0;
 
     }
 
-    public SerializableBlock(int block, byte data) {
+    public SerializableBlock(Material block, byte data) {
 
         this.block = block;
         this.data = data;
@@ -25,7 +27,7 @@ public class SerializableBlock {
 
         try {
 
-            block = Integer.parseInt(bits[0]);
+            block = Material.getMaterial(bits[0]);
             data = Byte.parseByte(bits[1]);
 
         } catch (NumberFormatException nfe) {
@@ -35,10 +37,10 @@ public class SerializableBlock {
         }
     }
 
-    private final int block;
+    private final Material block;
     private final byte data;
 
-    public int getBlock() {
+    public Material getBlock() {
 
         return block;
 

@@ -37,9 +37,6 @@ public class MineManager {
 
                         mine.run();
 
-                        if (MineCreatorPlugin.plugin.getConfig().getBoolean("mine.use_holograms"))
-                            MineStats.display(mine);
-
                     }
                 } catch (Throwable t) {
 

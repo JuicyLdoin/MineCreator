@@ -27,9 +27,6 @@ public class MineCreatorPlugin extends JavaPlugin {
         saveDefaultConfig();
 
         Plugins.init();
-
-        sendMessage(Bukkit.getConsoleSender(), "&fHologram plugin - " + (Plugins.HologramList ? "HologramList" : "&cnot found"));
-
         MineManager.init();
 
         getCommand("minecreator").setExecutor(new Commands());
@@ -67,9 +64,6 @@ public class MineCreatorPlugin extends JavaPlugin {
     }
 
     public void onDisable() {
-
-        for (Mine mine : MineManager.mines)
-            MineStats.breakDisplay(mine);
 
         MineManager.save();
 

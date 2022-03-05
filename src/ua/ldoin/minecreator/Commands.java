@@ -4,7 +4,6 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -131,27 +130,6 @@ public class Commands implements CommandExecutor {
                     return true;
 
                 }
-
-                if (args[0].equals("stats")) {
-
-                    String name = args[1];
-
-                    if (!MineManager.mineCreated(name)) {
-
-                        MineCreatorPlugin.sendMessage(p, MineCreatorPlugin.getMessageConfig("mines.not_found", null).replace("%mine%", name));
-                        return false;
-
-                    }
-
-                    Mine mine = MineManager.getMineByName(name);
-
-                    mine.setStats(p.getLocation());
-                    MineManager.save();
-
-                    MineCreatorPlugin.sendMessage(p, MineCreatorPlugin.getMessageConfig("mines.stats", mine));
-                    return true;
-
-                }
             }
 
             if (args.length == 3) {
@@ -205,9 +183,9 @@ public class Commands implements CommandExecutor {
                     Mine mine = null;
 
                     if (type.equals(Types.CUBOID))
-                        mine = new CuboidMine(name, position1, position2, p.getWorld(), null, -1, -1);
+                        mine = new CuboidMine(name, position1, position2, p.getWorld(), -1, -1);
                     else if (type.equals(Types.OVERLAY))
-                        mine = new OverlayMine(name, position1, position2, p.getWorld(), null, -1, -1);
+                        mine = new OverlayMine(name, position1, position2, p.getWorld(), -1, -1);
 
                     if (mine == null) {
 

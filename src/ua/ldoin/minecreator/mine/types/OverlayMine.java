@@ -19,17 +19,17 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class OverlayMine extends Mine implements ConfigurationSerializable {
 
-    public OverlayMine(String name, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, World world, Location stats, int resetDelay, int toReset) {
+    public OverlayMine(String name, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, World world, int resetDelay, int toReset) {
 
-        super(name, Types.OVERLAY, minX, minY, minZ, maxX, maxY, maxZ, world, stats, false, resetDelay, toReset);
+        super(name, Types.OVERLAY, minX, minY, minZ, maxX, maxY, maxZ, world, false, resetDelay, toReset);
 
         blocks = new HashMap<>();
 
     }
 
-    public OverlayMine(String name, Location minPoint, Location maxPoint, World world, Location stats, int resetDelay, int toReset) {
+    public OverlayMine(String name, Location minPoint, Location maxPoint, World world, int resetDelay, int toReset) {
 
-        super(name, Types.OVERLAY, minPoint, maxPoint, world, stats, false, resetDelay, toReset);
+        super(name, Types.OVERLAY, minPoint, maxPoint, world, false, resetDelay, toReset);
 
         blocks = new HashMap<>();
 
@@ -39,7 +39,7 @@ public class OverlayMine extends Mine implements ConfigurationSerializable {
 
         super((String) mine.get("name"), Types.OVERLAY, (Integer) mine.get("minX"), (Integer) mine.get("minY"), (Integer) mine.get("minZ"),
                 (Integer) mine.get("maxX"), (Integer) mine.get("maxY"), (Integer) mine.get("maxZ"), Bukkit.getWorld((String) mine.get("world")),
-                LocationUtil.getLocation((String) mine.get("stats")), false, (Integer) mine.get("resetDelay"), (Integer) mine.get("toReset"));
+                false, (Integer) mine.get("resetDelay"), (Integer) mine.get("toReset"));
 
         String stringBlocks = (String) mine.get("blocks");
         blocks = new HashMap<>();
@@ -74,8 +74,6 @@ public class OverlayMine extends Mine implements ConfigurationSerializable {
             b.append(entry.getKey().toString()).append("-").append(entry.getValue()).append("_");
 
         me.put("blocks", b.toString());
-
-        me.put("stats", LocationUtil.getLocation(getStats()));
         me.put("teleport", isTeleport());
 
         me.put("resetDelay", getResetDelay());
@@ -113,7 +111,7 @@ public class OverlayMine extends Mine implements ConfigurationSerializable {
             for (int y = getMinY(); y <= getMaxY(); y++)
                 for (int z = getMinZ(); z <= getMaxZ(); z++)
                     for (OverlayBlock block : this.blocks.keySet())
-                        if (getWorld().getBlockAt(x, y - 1, z).getTypeId() == block.getGround().getBlock() &&
+                        if (getWorld().getBlockAt(x, y - 1, z).getType().equals(block.getGround().getBlock()) &&
                                 getWorld().getBlockAt(x, y - 1, z).getData() == block.getGround().getData())
                             if (getWorld().getBlockAt(x, y, z).isEmpty())
                                 blocks.add(getWorld().getBlockAt(x, y, z));
@@ -130,7 +128,7 @@ public class OverlayMine extends Mine implements ConfigurationSerializable {
             for (int y = getMinY(); y <= getMaxY(); y++)
                 for (int z = getMinZ(); z <= getMaxZ(); z++)
                     for (OverlayBlock block : this.blocks.keySet())
-                        if (getWorld().getBlockAt(x, y - 1, z).getTypeId() == block.getGround().getBlock() &&
+                        if (getWorld().getBlockAt(x, y - 1, z).getType().equals(block.getGround().getBlock()) &&
                                 getWorld().getBlockAt(x, y - 1, z).getData() == block.getGround().getData())
                             blocks.add(getWorld().getBlockAt(x, y, z));
 
@@ -170,11 +168,21 @@ public class OverlayMine extends Mine implements ConfigurationSerializable {
                                 double r = ThreadLocalRandom.current().nextDouble();
 
                                 for (Map.Entry<OverlayBlock, Double> map : blocks.entrySet())
-                                    if (getWorld().getBlockAt(x, y - 1, z).getTypeId() == map.getKey().getGround().getBlock() &&
+                                    if (getWorld().getBlockAt(x, y - 1, z).getType().equals(map.getKey().getGround().getBlock()) &&
                                             getWorld().getBlockAt(x, y - 1, z).getData() == map.getKey().getGround().getData())
                                         if (r <= map.getValue()) {
 
-                                            getWorld().getBlockAt(x, y, z).setTypeIdAndData(map.getKey().getBlock().getBlock(), map.getKey().getBlock().getData(), true);
+
+                                            Block block = getWorld().getBlockAt(x, y, z);
+
+                                            block.setType(map.getKey().getBlock().getBlock());
+
+                                            try {
+
+                                                block.setData(map.getKey().getBlock().getData());
+
+                                            } catch (Exception ignored) {}
+
                                             break;
 
                                         }

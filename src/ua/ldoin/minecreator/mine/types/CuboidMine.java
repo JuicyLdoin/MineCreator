@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,17 +20,17 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CuboidMine extends Mine implements ConfigurationSerializable {
 
-    public CuboidMine(String name, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, World world, Location stats, int resetDelay, int toReset) {
+    public CuboidMine(String name, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, World world, int resetDelay, int toReset) {
 
-        super(name, Types.CUBOID, minX, minY, minZ, maxX, maxY, maxZ, world, stats, true, resetDelay, toReset);
+        super(name, Types.CUBOID, minX, minY, minZ, maxX, maxY, maxZ, world, true, resetDelay, toReset);
 
         blocks = new HashMap<>();
 
     }
 
-    public CuboidMine(String name, Location minPoint, Location maxPoint, World world, Location stats, int resetDelay, int toReset) {
+    public CuboidMine(String name, Location minPoint, Location maxPoint, World world, int resetDelay, int toReset) {
 
-        super(name, Types.CUBOID, minPoint, maxPoint, world, stats, true, resetDelay, toReset);
+        super(name, Types.CUBOID, minPoint, maxPoint, world, true, resetDelay, toReset);
 
         blocks = new HashMap<>();
 
@@ -39,7 +40,7 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
 
         super((String) mine.get("name"), Types.CUBOID, (Integer) mine.get("minX"), (Integer) mine.get("minY"), (Integer) mine.get("minZ"),
                 (Integer) mine.get("maxX"), (Integer) mine.get("maxY"), (Integer) mine.get("maxZ"), Bukkit.getWorld((String) mine.get("world")),
-                LocationUtil.getLocation((String) mine.get("stats")), true, (Integer) mine.get("resetDelay"), (Integer) mine.get("toReset"));
+                true, (Integer) mine.get("resetDelay"), (Integer) mine.get("toReset"));
 
         String stringBlocks = (String) mine.get("blocks");
         blocks = new HashMap<>();
@@ -74,8 +75,6 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
             b.append(entry.getKey().toString()).append("-").append(entry.getValue()).append("_");
 
         me.put("blocks", b.toString());
-
-        me.put("stats", LocationUtil.getLocation(getStats()));
         me.put("teleport", isTeleport());
 
         me.put("resetDelay", getResetDelay());
@@ -166,7 +165,16 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
                                 for (Map.Entry<SerializableBlock, Double> map : blocks.entrySet())
                                     if (r <= map.getValue()) {
 
-                                        getWorld().getBlockAt(x, y, z).setTypeIdAndData(map.getKey().getBlock(), map.getKey().getData(), true);
+                                        Block block = getWorld().getBlockAt(x, y, z);
+
+                                        block.setType(map.getKey().getBlock());
+
+                                        try {
+
+                                            block.setData(map.getKey().getData());
+
+                                        } catch (Exception ignored) {}
+
                                         break;
 
                                     }
