@@ -1,6 +1,4 @@
 # MineCreator
-HologramList a simple plugin designed to create hologram lists.
-
 MineCreator - plugin that is made for creating auto mines.
 
 Features:
