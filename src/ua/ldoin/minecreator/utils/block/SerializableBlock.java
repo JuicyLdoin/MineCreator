@@ -22,13 +22,14 @@ public class SerializableBlock {
 
         String[] bits = self.split(":");
 
-        if (bits.length != 2)
-            throw new IllegalArgumentException("String form of SerializableBlock didn't have exactly 2 numbers");
-
         try {
 
             block = Material.getMaterial(bits[0]);
-            data = Byte.parseByte(bits[1]);
+
+            if (bits.length == 2)
+                data = Byte.parseByte(bits[1]);
+            else
+                data = 0;
 
         } catch (NumberFormatException nfe) {
 
@@ -60,7 +61,7 @@ public class SerializableBlock {
 
     public boolean equals(Object o) {
 
-        return (o instanceof SerializableBlock && block == ((SerializableBlock)o).block && data == ((SerializableBlock)o).data);
+        return (o instanceof SerializableBlock && block == ((SerializableBlock) o).block && data == ((SerializableBlock) o).data);
 
     }
 }
