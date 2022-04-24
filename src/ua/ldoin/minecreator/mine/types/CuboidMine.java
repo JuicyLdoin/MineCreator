@@ -2,15 +2,14 @@ package ua.ldoin.minecreator.mine.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.ldoin.minecreator.MineCreatorPlugin;
 import ua.ldoin.minecreator.mine.Mine;
-import ua.ldoin.minecreator.utils.LocationUtil;
 import ua.ldoin.minecreator.utils.block.SerializableBlock;
 
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
         super(name, Types.CUBOID, minX, minY, minZ, maxX, maxY, maxZ, world, true, resetDelay, toReset);
 
         blocks = new HashMap<>();
+        surface = new SerializableBlock("0:0");
 
     }
 
@@ -33,6 +33,7 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
         super(name, Types.CUBOID, minPoint, maxPoint, world, true, resetDelay, toReset);
 
         blocks = new HashMap<>();
+        surface = new SerializableBlock("0:0");
 
     }
 
@@ -48,6 +49,8 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
         if (!stringBlocks.isEmpty())
             for (String block : stringBlocks.split("_"))
                 blocks.put(new SerializableBlock(block.split("-")[0]), Double.parseDouble(block.split("-")[1]));
+
+        surface = new SerializableBlock((String) mine.get("surface"));
 
     }
 
@@ -80,11 +83,18 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
         me.put("resetDelay", getResetDelay());
         me.put("toReset", getToReset());
 
+        if (surface != null)
+            me.put("surface", surface.toString());
+        else
+            me.put("surface", "0:0");
+
         return me;
 
     }
 
     private final Map<SerializableBlock, Double> blocks;
+
+    private SerializableBlock surface;
 
     public Map<SerializableBlock, Double> getBlocks() {
 
@@ -101,6 +111,12 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
     public void removeBlock(SerializableBlock block) {
 
         blocks.remove(block);
+
+    }
+
+    public void setSurface(SerializableBlock surface) {
+
+        this.surface = surface;
 
     }
 
@@ -159,6 +175,25 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
                     for (int x = getMinX() + finalThreadNumber; x <= getMaxX(); x += processors)
                         for (int y = getMinY(); y <= getMaxY(); y++)
                             for (int z = getMinZ(); z <= getMaxZ(); z++) {
+
+                                if ((surface != null && !surface.getBlock().equals(Material.AIR)) && y == getMaxY()) {
+
+                                    Block block = getWorld().getBlockAt(x, y, z);
+
+                                    if (isAllowToBreakBlock(block)) {
+
+                                        block.setType(surface.getBlock());
+
+                                        try {
+
+                                            block.setData(surface.getData());
+
+                                        } catch (Exception ignored) {}
+                                    }
+
+                                    continue;
+
+                                }
 
                                 double r = ThreadLocalRandom.current().nextDouble();
 

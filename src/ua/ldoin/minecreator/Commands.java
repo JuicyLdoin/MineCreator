@@ -220,6 +220,34 @@ public class Commands implements CommandExecutor {
                     return true;
 
                 }
+
+                if (args[0].equals("surface")) {
+
+                    String name = args[1];
+
+                    if (!MineManager.mineCreated(name)) {
+
+                        MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.not_found", null).replace("%mine%", name));
+                        return false;
+
+                    }
+
+                    Mine mine = MineManager.getMineByName(name);
+
+                    if (!(mine instanceof CuboidMine)) {
+
+                        MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.not_cuboid", null).replace("%mine%", name));
+                        return false;
+
+                    }
+
+                    ((CuboidMine) mine).setSurface(new SerializableBlock(args[2]));
+                    MineManager.save();
+
+                    MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.fill", mine));
+                    return true;
+
+                }
             }
 
             if (args.length == 4 && args[0].equals("set")) {
@@ -273,6 +301,8 @@ public class Commands implements CommandExecutor {
             MineCreatorPlugin.sendMessage(player, "&fOverlayMine block - &e1:0;2:0 &f(&cEXAMPLE&f) &lwhere 1:0 is ground");
 
             MineCreatorPlugin.sendMessage(player, "&e/minecreator remove [mine] [material] &f- remove block [material] from mine [mine]");
+
+            MineCreatorPlugin.sendMessage(player, "&e/mine surface [mine] [surface] &f- set surface to [surface] on mine [mine] &l(Only on Cuboid mine!)");
 
             MineCreatorPlugin.sendMessage(player, "&e/minecreator list &f- look at mine list");
 
