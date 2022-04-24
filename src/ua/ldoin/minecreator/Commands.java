@@ -1,15 +1,14 @@
 package ua.ldoin.minecreator;
 
 import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import ua.ldoin.minecreator.mine.*;
 import ua.ldoin.minecreator.mine.types.*;
@@ -107,7 +106,8 @@ public class Commands implements CommandExecutor {
 
                     try {
 
-                        selection = worldEdit.getSession(player).getSelection((World) ((CraftWorld) player.getWorld()).getHandle());
+                        LocalSession session = worldEdit.getSession(player);
+                        selection = session.getSelection(session.getSelectionWorld());
 
                     } catch (IncompleteRegionException e) {
 
@@ -244,7 +244,7 @@ public class Commands implements CommandExecutor {
                     ((CuboidMine) mine).setSurface(new SerializableBlock(args[2]));
                     MineManager.save();
 
-                    MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.fill", mine));
+                    MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.surface", mine));
                     return true;
 
                 }
@@ -302,7 +302,7 @@ public class Commands implements CommandExecutor {
 
             MineCreatorPlugin.sendMessage(player, "&e/minecreator remove [mine] [material] &f- remove block [material] from mine [mine]");
 
-            MineCreatorPlugin.sendMessage(player, "&e/mine surface [mine] [surface] &f- set surface to [surface] on mine [mine] &l(Only on Cuboid mine!)");
+            MineCreatorPlugin.sendMessage(player, "&e/minecreator surface [mine] [surface] &f- set surface to [surface] on mine [mine] &l(Only on Cuboid mine!)");
 
             MineCreatorPlugin.sendMessage(player, "&e/minecreator list &f- look at mine list");
 

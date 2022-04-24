@@ -4,6 +4,9 @@ import org.bukkit.Material;
 
 public class SerializableBlock {
 
+    private final Material block;
+    private final byte data;
+
     public SerializableBlock(Material block) {
 
         this.block = block;
@@ -24,7 +27,19 @@ public class SerializableBlock {
 
         try {
 
-            block = Material.getMaterial(bits[0]);
+            Material block;
+
+            try {
+
+                block = Material.getMaterial(Integer.parseInt(bits[0]));
+
+            } catch (Exception ignored) {
+
+                block = Material.getMaterial(bits[0]);
+
+            }
+
+            this.block = block;
 
             if (bits.length == 2)
                 data = Byte.parseByte(bits[1]);
@@ -37,9 +52,6 @@ public class SerializableBlock {
 
         }
     }
-
-    private final Material block;
-    private final byte data;
 
     public Material getBlock() {
 
