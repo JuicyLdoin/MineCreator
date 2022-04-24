@@ -35,9 +35,6 @@ mine:
   statistic_cooldown: 20 # (in ticks)
   blocks_drop_to_inventory: true
 
-  use_holograms: true
-  use_worldedit: false
-
   # if server has plugin HologramList
   hologram:
     - "Mine"

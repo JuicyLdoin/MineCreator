@@ -13,16 +13,9 @@ import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import ua.ldoin.minecreator.mine.*;
 import ua.ldoin.minecreator.mine.types.*;
-import ua.ldoin.minecreator.utils.*;
 import ua.ldoin.minecreator.utils.block.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Commands implements CommandExecutor {
-
-    private final Map<Player, Location> pos1 = new HashMap<>();
-    private final Map<Player, Location> pos2 = new HashMap<>();
 
     public boolean onCommand(CommandSender sender, Command cmd, String command, String[] args) {
 
@@ -56,42 +49,6 @@ public class Commands implements CommandExecutor {
             }
 
             if (args.length == 2) {
-
-                if (args[0].equals("setpos")) {
-
-                    if (MineCreatorPlugin.plugin.getConfig().getBoolean("mine.use_worldedit"))
-                        if (Plugins.WorldEdit) {
-
-                            MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.use_worldedit", null));
-                            return false;
-
-                        }
-
-                    if (!args[1].matches("^-?\\d+$")) {
-
-                        MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("not_an_integer", null));
-                        return false;
-
-                    }
-
-                    int point = Integer.parseInt(args[1]);
-
-                    if (point > 2) {
-
-                        MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.many_points", null));
-                        return false;
-
-                    }
-
-                    if (point == 1)
-                        pos1.put(player, player.getLocation());
-                    else if (point == 2)
-                        pos2.put(player, player.getLocation());
-
-                    MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.set_point", null));
-                    return true;
-
-                }
 
                 if (args[0].equals("delete")) {
 
@@ -141,49 +98,31 @@ public class Commands implements CommandExecutor {
 
                     String name = args[1];
 
-                    Location position1 = null;
-                    Location position2 = null;
+                    Location position1;
+                    Location position2;
 
-                    if (MineCreatorPlugin.plugin.getConfig().getBoolean("mine.use_worldedit"))
-                        if (Plugins.WorldEdit) {
+                    WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
 
-                            WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+                    Region selection;
 
-                            Region selection;
+                    try {
 
-                            try {
+                        selection = worldEdit.getSession(player).getSelection((World) ((CraftWorld) player.getWorld()).getHandle());
 
-                                selection = worldEdit.getSession(player).getSelection((World) ((CraftWorld) player.getWorld()).getHandle());
+                    } catch (IncompleteRegionException e) {
 
-                            } catch (IncompleteRegionException e) {
-
-                                e.printStackTrace();
-                                return false;
-
-                            }
-
-                            position1 = new Location(player.getWorld(), selection.getMinimumPoint().getBlockX(),
-                                    selection.getMinimumPoint().getBlockY(),
-                                    selection.getMinimumPoint().getBlockZ());
-
-                            position2 = new Location(player.getWorld(), selection.getMaximumPoint().getBlockX(),
-                                    selection.getMaximumPoint().getBlockY(),
-                                    selection.getMaximumPoint().getBlockZ());
-
-                        }
-
-                    if (position1 == null) {
-                        if (!pos1.containsKey(player) && !pos2.containsKey(player)) {
-
-                            MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.not_placed", null).replace("%mine%", name));
-                            return false;
-
-                        }
-
-                        position1 = pos1.get(player);
-                        position2 = pos2.get(player);
+                        e.printStackTrace();
+                        return false;
 
                     }
+
+                    position1 = new Location(player.getWorld(), selection.getMinimumPoint().getBlockX(),
+                            selection.getMinimumPoint().getBlockY(),
+                            selection.getMinimumPoint().getBlockZ());
+
+                    position2 = new Location(player.getWorld(), selection.getMaximumPoint().getBlockX(),
+                            selection.getMaximumPoint().getBlockY(),
+                            selection.getMaximumPoint().getBlockZ());
 
                     if (MineManager.mineCreated(name)) {
 
@@ -324,13 +263,6 @@ public class Commands implements CommandExecutor {
 
             MineCreatorPlugin.sendMessage(player, "&e&lMineCreator Help");
             MineCreatorPlugin.sendMessage(player, "&e/minecreator &f- look all commands of &eMineCreator");
-
-            if (!Plugins.WorldEdit || !MineCreatorPlugin.plugin.getConfig().getBoolean("mine.use_worldedit")) {
-
-                MineCreatorPlugin.sendMessage(player, "&c&lWorldEdit not use!");
-                MineCreatorPlugin.sendMessage(player, "&e/minecreator setpos [pos] &f- set mine position [pos] on current location");
-
-            }
 
             MineCreatorPlugin.sendMessage(player, "&e/minecreator create [mine] [type] &f- create mine with name [mine]");
             MineCreatorPlugin.sendMessage(player, "&e/minecreator delete [mine] &f- delete mine with name [mine]");

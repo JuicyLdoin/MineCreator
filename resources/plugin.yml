@@ -1,8 +1,8 @@
 name: MineCreator
 main: ua.ldoin.minecreator.MineCreatorPlugin
-version: 1.5
+version: 1.5.1
 author: Ldoin
-softdepend: [WorldEdit]
+depend: [WorldEdit]
 commands:
   minecreator:
     aliases:

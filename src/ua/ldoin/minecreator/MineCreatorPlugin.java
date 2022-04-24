@@ -7,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import ua.ldoin.minecreator.mine.*;
 import ua.ldoin.minecreator.mine.types.*;
-import ua.ldoin.minecreator.utils.*;
 
 public class MineCreatorPlugin extends JavaPlugin {
 
@@ -26,7 +25,6 @@ public class MineCreatorPlugin extends JavaPlugin {
 
         saveDefaultConfig();
 
-        Plugins.init();
         MineManager.init();
 
         getCommand("minecreator").setExecutor(new Commands());
