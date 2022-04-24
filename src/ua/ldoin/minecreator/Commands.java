@@ -244,7 +244,7 @@ public class Commands implements CommandExecutor {
                     ((CuboidMine) mine).setSurface(new SerializableBlock(args[2]));
                     MineManager.save();
 
-                    MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.surface", mine));
+                    MineCreatorPlugin.sendMessage(player, MineCreatorPlugin.getMessageConfig("mines.surface", mine).replace("%block%", args[2]));
                     return true;
 
                 }

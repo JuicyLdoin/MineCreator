@@ -147,6 +147,31 @@ public class CuboidMine extends Mine implements ConfigurationSerializable {
 
     }
 
+    public boolean isAllowToBreakBlock(Block b) {
+
+        if (b == null)
+            return false;
+
+        Location l = b.getLocation();
+
+        boolean contains = (b.getType().equals(Material.AIR) || (surface != null && !surface.getBlock().equals(Material.AIR) && surface.getBlock().equals(b.getType()) && this.surface.getData() == b.getData()));
+
+        if (!contains)
+            for (SerializableBlock block : blocks.keySet())
+                if (block.getBlock().equals(b.getType()) && block.getData() == b.getData()) {
+
+                    contains = true;
+                    break;
+
+                }
+
+        return (contains && l.getWorld().equals(getWorld()) && l
+                .getX() >= getMinX() && l.getX() <= getMaxX() && l
+                .getY() >= getMinY() && l.getY() <= getMaxY() && l
+                .getZ() >= getMinZ() && l.getZ() <= getMaxZ());
+
+    }
+
     public void fill() {
 
         if (blocks.isEmpty())

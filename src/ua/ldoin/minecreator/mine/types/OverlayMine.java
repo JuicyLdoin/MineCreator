@@ -136,6 +136,30 @@ public class OverlayMine extends Mine implements ConfigurationSerializable {
 
     }
 
+    public boolean isAllowToBreakBlock(Block b) {
+
+        if (b == null)
+            return false;
+
+        Location l = b.getLocation();
+        boolean contains = false;
+
+        for (OverlayBlock block : blocks.keySet())
+            if (block.getBlock().getBlock().equals(b.getType()) && block.getBlock().getData() == b.getData() && b
+                    .getWorld().getBlockAt(b.getLocation().clone().subtract(0.0D, 1.0D, 0.0D)).getType().equals(block.getGround().getBlock()) && b
+                    .getWorld().getBlockAt(b.getLocation().clone().subtract(0.0D, 1.0D, 0.0D)).getData() == block.getGround().getData()) {
+
+                contains = true;
+                break;
+
+            }
+
+        return (contains && l.getWorld().equals(getWorld()) && l
+                .getX() >= getMinX() && l.getX() <= getMaxX() && l
+                .getY() >= getMinY() && l.getY() <= getMaxY() && l
+                .getZ() >= getMinZ() && l.getZ() <= getMaxZ());
+    }
+
     public void fill() {
 
         if (blocks.isEmpty())

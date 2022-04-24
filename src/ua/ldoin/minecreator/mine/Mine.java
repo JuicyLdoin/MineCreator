@@ -186,6 +186,8 @@ public abstract class Mine implements ConfigurationSerializable {
 
     public abstract int getTotalBlocksInMine();
 
+    public abstract boolean isAllowToBreakBlock(Block b);
+
     public boolean isInside(Player p) {
 
         Location l = p.getLocation();
@@ -194,17 +196,6 @@ public abstract class Mine implements ConfigurationSerializable {
                 .getX() >= minX && l.getX() <= maxX && l
                 .getY() >= minY && l.getY() <= maxY && l
                 .getZ() >= minZ && l.getZ() <= maxZ);
-
-    }
-
-    public boolean isAllowToBreakBlock(Block b) {
-
-        Location l = b.getLocation();
-
-        return (l.getWorld().equals(world) &&
-                l.getX() >= minX && l.getX() <= maxX &&
-                l.getY() >= minY && l.getY() <= maxY &&
-                l.getZ() >= minZ && l.getZ() <= maxZ);
 
     }
 

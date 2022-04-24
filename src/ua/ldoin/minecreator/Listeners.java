@@ -1,5 +1,6 @@
 package ua.ldoin.minecreator;
 
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,18 +20,17 @@ public class Listeners implements Listener {
                 if (mine.isAllowToBreakBlock(event.getBlock())) {
 
                     Player player = event.getPlayer();
+                    event.setCancelled(true);
 
-                    if (player.getInventory().firstEmpty() == -1) {
-
-                        event.setCancelled(true);
+                    if (player.getInventory().firstEmpty() == -1)
                         return;
-
-                    }
 
                     if (player.getItemInHand().getEnchantments().containsKey(Enchantment.SILK_TOUCH))
                         player.getInventory().addItem(new ItemStack(event.getBlock().getType(), 1, event.getBlock().getData()));
                     else
                         event.getBlock().getDrops(player.getItemInHand()).forEach(items -> player.getInventory().addItem(new ItemStack[] { new ItemStack(items) }));
+
+                    event.getBlock().setType(Material.AIR);
 
                 }
     }
