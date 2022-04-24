@@ -31,16 +31,4 @@ messages:
   not_an_integer: "&cThe number is not an integer!"
 
 mine:
-
-  statistic_cooldown: 20 # (in ticks)
   blocks_drop_to_inventory: true
-
-  # if server has plugin HologramList
-  hologram:
-    - "Mine"
-    - " "
-    - "Name: %mine%"
-    - "Time to reset: %to_reset%"
-    - " "
-    - "Blocks in mine: %total_blocks_in_mine%"
-    - "Blocks mined: %blocks_mined%"
