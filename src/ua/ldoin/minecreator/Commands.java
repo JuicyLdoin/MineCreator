@@ -109,7 +109,7 @@ public class Commands implements CommandExecutor {
                         LocalSession session = worldEdit.getSession(player);
                         selection = session.getSelection(session.getSelectionWorld());
 
-                    } catch (IncompleteRegionException e) {
+                    } catch (Exception e) {
 
                         e.printStackTrace();
                         return false;
