@@ -1,10 +1,11 @@
 # MineCreator
 MineCreator - plugin that is made for creating auto mines.
 
+Dependencies:
+- WorldEdit
+
 Features:
-- Support Holograms (HologramList (by Ldoin)) which you can change in configs.
-- Teleports players to the top of the mine when it is fill.
-- Easily modify block percentages.
+- Different types of mines.
 
 Permissions:
 - minecreator.manage - give access to all commands
